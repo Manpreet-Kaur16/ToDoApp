@@ -11,71 +11,26 @@
     <div class="flex flex-col items-center w-[400] h-[400] mt-4">
       <h1 class="font-bold text-xl">ToDoApp</h1>
       <div class="space-y-6 mt-6">
+        <span id="errorMessage" class="text-red-700 font-bold" style="display: none"
+          >this field is required</span
+        >
         <input
+          id="inputField"
           type="text"
           placeholder="input"
           name="title"
           class="border border-gray-300 px-2 py-1"
         />
+
         <button id="addbtn" class="bg-blue-700 text-white px-4 py-1 rounded">
           Create
         </button>
       </div>
     </div>
     <div
+      id="toDoContainer"
       class="border border-dashed border-gray-500 w-[640px] p-4 bg-white mx-auto"
-    >
-      <div
-        class="flex items-center justify-between bg-gray-100 w-[600px] mt-4 px-4 py-2 mx-auto"
-      >
-        <div>
-          <input type="checkbox" />
-          <span> aaaaaaaa</span>
-        </div>
-        <div>
-          <button class="bg-purple-800 text-white rounded px-4 py-1">
-            Edit
-          </button>
-          <button class="bg-red-800 text-white rounded px-4 py-1">
-            Delete
-          </button>
-        </div>
-      </div>
-
-      <div
-        class="flex items-center justify-between bg-gray-100 w-[600px] mt-4 px-4 py-2 mx-auto"
-      >
-        <div>
-          <input type="checkbox" />
-          <span>bbbbbb</span>
-        </div>
-        <div>
-          <button class="bg-purple-800 text-white rounded px-4 py-1">
-            Edit
-          </button>
-          <button class="bg-red-800 text-white rounded px-4 py-1">
-            Delete
-          </button>
-        </div>
-      </div>
-
-      <div
-        class="flex items-center justify-between bg-gray-100 w-[600px] mt-4 px-4 py-2 mx-auto"
-      >
-        <div>
-          <input type="checkbox" />
-          <span>cccccc</span>
-        </div>
-        <div>
-          <button class="bg-purple-800 text-white rounded px-4 py-1">
-            Edit
-          </button>
-          <button class="bg-red-800 text-white rounded px-4 py-1">
-            Delete
-          </button>
-        </div>
-      </div>
-    </div>
+    ></div>
 
     <script src="script.js"></script>
   </body>

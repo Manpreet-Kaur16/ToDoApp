@@ -1,6 +1,7 @@
 //console.log("hello world!!!");
 let addbtnElement = document.getElementById("addbtn");
 let inputFieldElement = document.getElementById("inputField");
+let checkboxFieldElement = document.getElementById("checkboxField");
 let errormessageElement = document.getElementById("errorMessage");
 let todoContainerElement = document.getElementById("toDoContainer");
 let toDos = [];
@@ -27,16 +28,22 @@ addbtnElement.addEventListener("click", () => {
 
   console.log(toDos);
   inputFieldElement.value = "";
+  
   toDos.forEach((toDo, index) => {
     toDoshtml += `<div
         class="flex items-center justify-between bg-gray-100 w-[600px] mt-4 px-4 py-2 mx-auto"
       >
         <div>
-          <input type="checkbox" />
-          <span>${toDo.title}</span>
+          <input id="checkboxField" type="checkbox" />
+                 
+          <span class= "${
+            toDo.isCompleted ? "checked bg-green-200 text-green-700" : ""
+          }">
+           ${toDo.title}</span>
+
         </div>
         <div>
-          <button class="editbtn bg-purple-800 text-white rounded px-4 py-1">
+          <button id="editbtn" class="bg-purple-800 text-white rounded px-4 py-1">
             Edit
           </button>
           <button
@@ -46,6 +53,8 @@ addbtnElement.addEventListener("click", () => {
             Delete
           </button>
         </div>
+
+        
       </div>`;
   });
   console.log(toDoshtml);

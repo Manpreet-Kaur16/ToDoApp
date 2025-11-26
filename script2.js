@@ -10,8 +10,7 @@ let toDos = inputfromlocalStroageButParsed || [];
 let toDoshtml = "";
 
 console.log(inputfromlocalStroage, inputfromlocalStroageButParsed);
-inputfromlocalStroageButParsed?.forEach((toDo, index) => {
-  //function displaytoDos(toDo) {
+function displaytoDos(toDo) {
   toDoshtml += `<div
         class="flex items-center justify-between bg-gray-100 w-[600px] mt-4 px-4 py-2 mx-auto"
       >
@@ -36,12 +35,18 @@ inputfromlocalStroageButParsed?.forEach((toDo, index) => {
           </button>
         </div> 
       </div>`;
-});
+}
+
+if (Array.isArray(inputfromlocalStroageButParsed)) {
+  inputfromlocalStroageButParsed.forEach((toDo) => {
+    displaytoDos(toDo);
+  });
+}
 console.log(toDoshtml);
 todoContainerElement.innerHTML = toDoshtml;
 
 addbtnElement.addEventListener("click", () => {
-  let toDoshtml = "";
+  toDoshtml = "";
   console.log(inputFieldElement.value);
   let userInput = inputFieldElement.value;
   let userInputobj = {
@@ -67,35 +72,11 @@ addbtnElement.addEventListener("click", () => {
 
   console.log(toDos);
   inputFieldElement.value = "";
-  //displaytoDos(toDo);
 
-  toDos.forEach((toDo, index) => {
-    toDoshtml += `<div
-        class="flex items-center justify-between bg-gray-100 w-[600px] mt-4 px-4 py-2 mx-auto"
-      >
-        <div>
-          <input id="checkboxField" type="checkbox" />
-                 
-          <span class= "${
-            toDo.isCompleted ? "checked bg-green-200 text-green-700" : ""
-          }">
-           ${toDo.title}</span>
-
-        </div>
-        <div>
-          <button id="editbtn" class="bg-purple-800 text-white rounded px-4 py-1">
-            Edit
-          </button>
-          <button
-            id="deletebtn"
-            class="bg-red-800 text-white rounded px-4 py-1"
-          >
-            Delete
-          </button>
-        </div>
-
-        
-      </div>`;
+  // regenerate HTML for all todos and render
+  toDoshtml = "";
+  toDos.forEach((toDo) => {
+    displaytoDos(toDo);
   });
 
   console.log(toDoshtml);

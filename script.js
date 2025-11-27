@@ -1,5 +1,6 @@
 //console.log("hello world!!!");
 let addbtnElement = document.getElementById("addbtn");
+let clearbtnElement = document.getElementById("clearbtn");
 let inputFieldElement = document.getElementById("inputField");
 let checkboxFieldElement = document.getElementById("checkboxField");
 let errormessageElement = document.getElementById("errorMessage");
@@ -7,16 +8,15 @@ let todoContainerElement = document.getElementById("toDoContainer");
 let inputfromlocalStroage = localStorage.getItem("toDosArray");
 let inputfromlocalStroageButParsed = JSON.parse(inputfromlocalStroage);
 let toDos = inputfromlocalStroageButParsed || [];
-let toDoshtml = "";
 
-console.log(inputfromlocalStroage, inputfromlocalStroageButParsed);
-inputfromlocalStroageButParsed?.forEach((toDo, index) => {
-  //function displaytoDos(toDo) {
-  toDoshtml += `<div
+function displaytoDos(toDos) {
+  let toDoshtml = "";
+  toDos?.forEach((toDo, index) => {
+    toDoshtml += `<div
         class="flex items-center justify-between bg-gray-100 w-[600px] mt-4 px-4 py-2 mx-auto"
       >
         <div>
-          <input id="checkboxField" type="checkbox" />
+          <input class= "checkboxField" type="checkbox" />
                  
           <span class= "${
             toDo.isCompleted ? "checked bg-green-200 text-green-700" : ""
@@ -25,23 +25,45 @@ inputfromlocalStroageButParsed?.forEach((toDo, index) => {
 
         </div>
         <div>
-          <button id="editbtn" class="bg-purple-800 text-white rounded px-4 py-1">
+          <button class="editbtn bg-purple-800 text-white rounded px-4 py-1">
             Edit
           </button>
           <button
-            id="deletebtn"
-            class="bg-red-800 text-white rounded px-4 py-1"
+            class="deletebtn bg-red-800 text-white rounded px-4 py-1"
           >
             Delete
           </button>
         </div> 
       </div>`;
-});
-console.log(toDoshtml);
-todoContainerElement.innerHTML = toDoshtml;
+  });
+  todoContainerElement.innerHTML = toDoshtml;
 
+  let checkboxFields = document.querySelectorAll(".checkboxField");
+  checkboxFields.forEach((checkboxField) => {
+    checkboxField.addEventListener("change", () => {
+      console.log("checkbox is clicked");
+    });
+  });
+
+  let editButtons = document.querySelectorAll(".editbtn");
+  console.log(editButtons);
+  editButtons.forEach((editbutton) => {
+    editbutton.addEventListener("click", () => {
+      console.log("click edit button");
+    });
+  });
+
+  let deleteButtons = document.querySelectorAll(".deletebtn");
+  deleteButtons.forEach((deleteButton) => {
+    deleteButton.addEventListener("click", () => {
+      console.log("you hit Delete button");
+    });
+  });
+}
+
+console.log(inputfromlocalStroage, inputfromlocalStroageButParsed);
+displaytoDos(inputfromlocalStroageButParsed);
 addbtnElement.addEventListener("click", () => {
-  let toDoshtml = "";
   console.log(inputFieldElement.value);
   let userInput = inputFieldElement.value;
   let userInputobj = {
@@ -58,46 +80,17 @@ addbtnElement.addEventListener("click", () => {
     // alert("please enter value");
     return false;
   }
+
+  clearbtnElement.addEventListener("click", () => {
+    localStorage.clear();
+    window.location.reload();
+  });
   toDos.push(userInputobj);
   inputFieldElement.style.border = "1px solid ";
   errormessageElement.style.display = "none";
-
   let userString = JSON.stringify(toDos);
   localStorage.setItem("toDosArray", userString);
-
   console.log(toDos);
   inputFieldElement.value = "";
-  //displaytoDos(toDo);
-
-  toDos.forEach((toDo, index) => {
-    toDoshtml += `<div
-        class="flex items-center justify-between bg-gray-100 w-[600px] mt-4 px-4 py-2 mx-auto"
-      >
-        <div>
-          <input id="checkboxField" type="checkbox" />
-                 
-          <span class= "${
-            toDo.isCompleted ? "checked bg-green-200 text-green-700" : ""
-          }">
-           ${toDo.title}</span>
-
-        </div>
-        <div>
-          <button id="editbtn" class="bg-purple-800 text-white rounded px-4 py-1">
-            Edit
-          </button>
-          <button
-            id="deletebtn"
-            class="bg-red-800 text-white rounded px-4 py-1"
-          >
-            Delete
-          </button>
-        </div>
-
-        
-      </div>`;
-  });
-
-  console.log(toDoshtml);
-  todoContainerElement.innerHTML = toDoshtml;
+  displaytoDos(toDos);
 });

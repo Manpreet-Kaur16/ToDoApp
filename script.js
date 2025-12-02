@@ -5,31 +5,94 @@ let inputFieldElement = document.getElementById("inputField");
 let checkboxFieldElement = document.getElementById("checkboxField");
 let errormessageElement = document.getElementById("errorMessage");
 let todoContainerElement = document.getElementById("toDoContainer");
+let selectElement = document.getElementsByClassName(".status");
 let inputfromlocalStroage = localStorage.getItem("toDosArray");
 let inputfromlocalStroageButParsed = JSON.parse(inputfromlocalStroage);
 let toDos = inputfromlocalStroageButParsed || [];
 
-function displaytoDos(toDos) {
+function toggleCompleteCheckbox(toDoid, checked) {
+  let updatedtoDos = toDos.map((toDo) => {
+    if (toDo.id == toDoid) {
+      return {
+        ...toDo,
+        isCompleted: checked,
+      };
+    }
+
+    return toDo;
+  });
+  toDos = updatedtoDos;
+  let updatedtoDosString = JSON.stringify(updatedtoDos);
+  localStorage.setItem("toDosArray", updatedtoDosString);
+  displaytoDos(updatedtoDos);
+}
+
+function editToDo(toDoid) {
+  let toDosAfterEdit = toDos.find((toDo) => {
+    if (toDo.id == toDoid) {
+      return toDo;
+    }
+  });
+  console.log(toDosAfterEdit);
+  const updatedTitleValue = prompt("Edit todo:", toDosAfterEdit.title);
+
+  if (updatedTitleValue) {
+    const updatedtoDos = toDos.map((toDo) => {
+      if (toDo.id == toDoid) {
+        return {
+          ...toDo,
+          title: updatedTitleValue,
+        };
+      }
+      return toDo;
+    });
+    toDos = updatedtoDos;
+    let updatedtoDosString = JSON.stringify(updatedtoDos);
+    localStorage.setItem("toDosArray", updatedtoDosString);
+    displaytoDos(updatedtoDos);
+  }
+}
+
+function deleteToDo(id) {
+  let toDosAfterDelete = toDos.filter((toDo) => {
+    if (toDo.id != id) {
+      return toDo;
+    }
+  });
+  toDos = toDosAfterDelete;
+  let userString = JSON.stringify(toDosAfterDelete);
+  localStorage.setItem("toDosArray", userString);
+  //console.log(toDosAfterDelete);
+  displaytoDos(toDosAfterDelete);
+}
+
+function displaytoDos(toDosData) {
+  //console.log(toDosData);
   let toDoshtml = "";
-  toDos?.forEach((toDo, index) => {
+  toDosData?.forEach((toDo, index) => {
     toDoshtml += `<div
         class="flex items-center justify-between bg-gray-100 w-[600px] mt-4 px-4 py-2 mx-auto"
       >
         <div>
-          <input class= "checkboxField" type="checkbox" />
+          <input class= "checkboxField" type="checkbox" data-id = "${
+            toDo.id
+          }" ${toDo.isCompleted ? "checked" : ""} />
                  
-          <span class= "${
-            toDo.isCompleted ? "checked bg-green-200 text-green-700" : ""
-          }">
-           ${toDo.title}</span>
+          <span class 
+          
+          
+          = "${toDo.isCompleted ? "line-through" : ""}">${toDo.title}</span>
 
         </div>
         <div>
-          <button class="editbtn bg-purple-800 text-white rounded px-4 py-1">
+          <button class="editbtn bg-purple-800 text-white rounded px-4 py-1" data-id ="${
+            toDo.id
+          }">
             Edit
           </button>
           <button
-            class="deletebtn bg-red-800 text-white rounded px-4 py-1"
+            class="deletebtn bg-red-800 text-white rounded px-4 py-1" 
+            data-id="${toDo.id}"
           >
             Delete
           </button>
@@ -41,30 +104,49 @@ function displaytoDos(toDos) {
   let checkboxFields = document.querySelectorAll(".checkboxField");
   checkboxFields.forEach((checkboxField) => {
     checkboxField.addEventListener("change", () => {
-      console.log("checkbox is clicked");
+      let toDoid = checkboxField.getAttribute("data-id");
+      console.log("checkbox", toDoid);
+      toggleCompleteCheckbox(toDoid, checkboxField.checked);
     });
   });
 
+  let selectedElements = document.querySelector(".status");
+  selectedElements.addEventListener("change", () => {
+    //console.log("selectedElements", selectedElements.value);
+    let filteredData = toDos;
+    if (selectedElements.value == "complete") {
+      filteredData = toDos.filter((toDo) => toDo.isCompleted == true);
+      // console.log(filteredData);
+    }
+    if (selectedElements.value == "unchecked") {
+      filteredData = toDos.filter((toDo) => toDo.isCompleted == false);
+      //console.log(filteredData);
+    }
+    displaytoDos(filteredData);
+  });
+
   let editButtons = document.querySelectorAll(".editbtn");
-  console.log(editButtons);
-  editButtons.forEach((editbutton) => {
-    editbutton.addEventListener("click", () => {
-      console.log("click edit button");
+
+  editButtons.forEach((editButton) => {
+    editButton.addEventListener("click", () => {
+      let toDoid = editButton.getAttribute("data-id");
+      console.log("click edit button", toDoid);
+      editToDo(toDoid);
     });
   });
 
   let deleteButtons = document.querySelectorAll(".deletebtn");
   deleteButtons.forEach((deleteButton) => {
     deleteButton.addEventListener("click", () => {
-      console.log("you hit Delete button");
+      let toDoid = deleteButton.getAttribute("data-id");
+      deleteToDo(toDoid);
     });
   });
 }
 
-console.log(inputfromlocalStroage, inputfromlocalStroageButParsed);
 displaytoDos(inputfromlocalStroageButParsed);
+
 addbtnElement.addEventListener("click", () => {
-  console.log(inputFieldElement.value);
   let userInput = inputFieldElement.value;
   let userInputobj = {
     // id: window.crypto.randomUUID(), //
@@ -81,16 +163,16 @@ addbtnElement.addEventListener("click", () => {
     return false;
   }
 
-  clearbtnElement.addEventListener("click", () => {
-    localStorage.clear();
-    window.location.reload();
-  });
   toDos.push(userInputobj);
   inputFieldElement.style.border = "1px solid ";
   errormessageElement.style.display = "none";
   let userString = JSON.stringify(toDos);
   localStorage.setItem("toDosArray", userString);
-  console.log(toDos);
   inputFieldElement.value = "";
   displaytoDos(toDos);
+});
+
+clearbtnElement.addEventListener("click", () => {
+  localStorage.clear();
+  window.location.reload();
 });

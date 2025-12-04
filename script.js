@@ -6,10 +6,13 @@ let checkboxFieldElement = document.getElementById("checkboxField");
 let errormessageElement = document.getElementById("errorMessage");
 let todoContainerElement = document.getElementById("toDoContainer");
 let selectElement = document.getElementsByClassName(".status");
+let selectedField = document.getElementsByName("status");
+let sortedElement = document.getElementById("sortBy");
+let newInputField = document.getElementById("userInput");
 let inputfromlocalStroage = localStorage.getItem("toDosArray");
 let inputfromlocalStroageButParsed = JSON.parse(inputfromlocalStroage);
 let toDos = inputfromlocalStroageButParsed || [];
-
+console.log(sortedElement);
 function toggleCompleteCheckbox(toDoid, checked) {
   let updatedtoDos = toDos.map((toDo) => {
     if (toDo.id == toDoid) {
@@ -118,11 +121,45 @@ function displaytoDos(toDosData) {
       filteredData = toDos.filter((toDo) => toDo.isCompleted == true);
       // console.log(filteredData);
     }
-    if (selectedElements.value == "unchecked") {
+    if (selectedElements.value == "incomplete") {
       filteredData = toDos.filter((toDo) => toDo.isCompleted == false);
       //console.log(filteredData);
     }
     displaytoDos(filteredData);
+  });
+
+  let selectedField = document.querySelectorAll("input[name=status]");
+  selectedField.forEach((radiobutton) => {
+    radiobutton.addEventListener("click", () => {
+      let filteredData = toDos;
+      if (radiobutton.value == "complete") {
+        filteredData = toDos.filter((toDo) => toDo.isCompleted == true);
+      }
+      if (radiobutton.value == "incomplete") {
+        filteredData = toDos.filter((toDo) => toDo.isCompleted == false);
+      }
+      displaytoDos(filteredData);
+    });
+  });
+
+  // sorted data//
+  sortedElement.addEventListener("change", () => {
+    if (sortedElement.value == "sortA-Z") {
+      toDos.sort((a, b) => a.title.localeCompare(b.title));
+
+      console.log("\n\n\n................sort by title...........", toDos);
+    }
+
+    if (sortedElement.value == "sortID") {
+      toDos.sort((a, b) => a.id - b.id);
+    }
+    displaytoDos(toDos);
+  });
+
+  // search //
+
+  newInputField.addEventListener("keyup", () => {
+    console.log(newInputField.value);
   });
 
   let editButtons = document.querySelectorAll(".editbtn");

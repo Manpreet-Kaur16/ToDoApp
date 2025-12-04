@@ -158,8 +158,15 @@ function displaytoDos(toDosData) {
 
   // search //
 
-  newInputField.addEventListener("keyup", () => {
+  newInputField.addEventListener("blur", () => {
     console.log(newInputField.value);
+    let filteredData = toDos.filter((toDo) => {
+      if (toDo.title.includes(newInputField.value)) {
+        return toDo;
+      }
+    });
+    console.log(filteredData);
+    displaytoDos(filteredData);
   });
 
   let editButtons = document.querySelectorAll(".editbtn");

@@ -9,6 +9,7 @@ let selectElement = document.getElementsByClassName(".status");
 let selectedField = document.getElementsByName("status");
 let sortedElement = document.getElementById("sortBy");
 let newInputField = document.getElementById("userInput");
+let clearSearchButton = document.getElementById("clearSearch");
 let inputfromlocalStroage = localStorage.getItem("toDosArray");
 let inputfromlocalStroageButParsed = JSON.parse(inputfromlocalStroage);
 let toDos = inputfromlocalStroageButParsed || [];
@@ -161,12 +162,20 @@ function displaytoDos(toDosData) {
   newInputField.addEventListener("blur", () => {
     console.log(newInputField.value);
     let filteredData = toDos.filter((toDo) => {
-      if (toDo.title.includes(newInputField.value)) {
+      if (
+        toDo.title.toLowerCase().includes(newInputField.value.toLowerCase())
+      ) {
         return toDo;
       }
     });
     console.log(filteredData);
     displaytoDos(filteredData);
+  });
+  // clear search text//
+
+  clearSearchButton.addEventListener("click", () => {
+    newInputField.value = "";
+    displaytoDos(toDos);
   });
 
   let editButtons = document.querySelectorAll(".editbtn");

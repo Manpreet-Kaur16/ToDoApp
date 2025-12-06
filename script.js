@@ -193,7 +193,7 @@ function displaytoDos(toDosData) {
 
 displaytoDos(inputfromlocalStroageButParsed);
 
-addbtnElement.addEventListener("click", () => {
+const createToDo = () => {
   let userInput = inputFieldElement.value;
   let userInputobj = {
     // id: window.crypto.randomUUID(), //
@@ -217,8 +217,13 @@ addbtnElement.addEventListener("click", () => {
   localStorage.setItem("toDosArray", userString);
   inputFieldElement.value = "";
   displaytoDos(toDos);
+};
+addbtnElement.addEventListener("click", createToDo);
+inputFieldElement.addEventListener("keypress", (event) => {
+  if (event.key == "Enter") {
+    createToDo();
+  }
 });
-
 clearbtnElement.addEventListener("click", () => {
   localStorage.clear();
   window.location.reload();

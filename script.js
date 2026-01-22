@@ -13,7 +13,7 @@ let clearSearchButton = document.getElementById("clearSearch");
 let inputfromlocalStroage = localStorage.getItem("toDosArray");
 let inputfromlocalStroageButParsed = JSON.parse(inputfromlocalStroage);
 let toDos = inputfromlocalStroageButParsed || [];
-console.log(sortedElement);
+//console.log(sortedElement);
 function toggleCompleteCheckbox(toDoid, checked) {
   let updatedtoDos = toDos.map((toDo) => {
     if (toDo.id == toDoid) {
@@ -76,22 +76,18 @@ function displaytoDos(toDosData) {
   toDosData?.forEach((toDo, index) => {
     toDoshtml += `<div class="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow duration-200 flex items-center justify-between">
         <div class="flex items-center flex-1">
-          <input class="checkboxField w-5 h-5 text-blue-600 rounded focus:ring-blue-500" type="checkbox" data-id="${
-            toDo.id
-          }" ${toDo.isCompleted ? "checked" : ""} />
-          <span class="ml-3 text-lg ${
-            toDo.isCompleted ? "line-through text-gray-500" : "text-gray-900"
-          } transition-colors duration-200">${toDo.title}</span>
+          <input class="checkboxField w-5 h-5 text-blue-600 rounded focus:ring-blue-500" type="checkbox" data-id="${toDo.id
+      }" ${toDo.isCompleted ? "checked" : ""} />
+          <span class="ml-3 text-lg ${toDo.isCompleted ? "line-through text-gray-500" : "text-gray-900"
+      } transition-colors duration-200">${toDo.title}</span>
         </div>
         <div class="flex gap-2">
-          <button class="editbtn bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded-md transition-colors duration-200 font-medium" data-id="${
-            toDo.id
-          }">
+          <button class="editbtn bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded-md transition-colors duration-200 font-medium" data-id="${toDo.id
+      }">
             Edit
           </button>
-          <button class="deletebtn bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md transition-colors duration-200 font-medium" data-id="${
-            toDo.id
-          }">
+          <button class="deletebtn bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md transition-colors duration-200 font-medium" data-id="${toDo.id
+      }">
             Delete
           </button>
         </div>

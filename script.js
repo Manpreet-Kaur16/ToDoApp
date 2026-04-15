@@ -3,7 +3,7 @@ let addbtnElement = document.getElementById("addbtn");
 let clearbtnElement = document.getElementById("clearbtn");
 let inputFieldElement = document.getElementById("inputField");
 let checkboxFieldElement = document.getElementById("checkboxField");
-let errormessageElement = document.getElementById("errorMessage");
+let errorMessageElement = document.getElementById("errorMessage");
 let todoContainerElement = document.getElementById("toDoContainer");
 let selectElement = document.getElementsByClassName(".status");
 let selectedField = document.getElementsByName("status");
@@ -13,6 +13,17 @@ let clearSearchButton = document.getElementById("clearSearch");
 let inputfromlocalStroage = localStorage.getItem("toDosArray");
 let inputfromlocalStroageButParsed = JSON.parse(inputfromlocalStroage);
 let toDos = inputfromlocalStroageButParsed || [];
+
+
+
+let urlString = window.location.search;
+console.log("urlString", urlString);
+let urlParams = new URLSearchParams(urlString);
+let searched = urlParams.get("searchValue")
+selectElement.value = searched;
+
+console.log("urlParams after set", urlParams);
+console.log("urlParams after set", urlParams.toString());
 //console.log(sortedElement);
 function toggleCompleteCheckbox(toDoid, checked) {
   let updatedtoDos = toDos.map((toDo) => {
@@ -70,6 +81,7 @@ function deleteToDo(id) {
   displaytoDos(toDosAfterDelete);
 }
 
+
 function displaytoDos(toDosData) {
   //console.log(toDosData);
   let toDoshtml = "";
@@ -110,10 +122,13 @@ function displaytoDos(toDosData) {
     let filteredData = toDos;
     if (selectedElements.value == "complete") {
       filteredData = toDos.filter((toDo) => toDo.isCompleted == true);
+
+      updateQueryParam("status", "complete");
       // console.log(filteredData);
     }
     if (selectedElements.value == "incomplete") {
       filteredData = toDos.filter((toDo) => toDo.isCompleted == false);
+      updateQueryParam("status", "incomplete")
       //console.log(filteredData);
     }
     displaytoDos(filteredData);
@@ -125,9 +140,11 @@ function displaytoDos(toDosData) {
       let filteredData = toDos;
       if (radiobutton.value == "complete") {
         filteredData = toDos.filter((toDo) => toDo.isCompleted == true);
+        updateQueryParam("status", "complete")
       }
       if (radiobutton.value == "incomplete") {
         filteredData = toDos.filter((toDo) => toDo.isCompleted == false);
+        updateQueryParam("status", "incomplete")
       }
       displaytoDos(filteredData);
     });
@@ -138,11 +155,13 @@ function displaytoDos(toDosData) {
     if (sortedElement.value == "sortA-Z") {
       toDos.sort((a, b) => a.title.localeCompare(b.title));
 
+      updateQueryParam("sortBy", "sortA-Z")
       console.log("\n\n\n................sort by title...........", toDos);
     }
 
     if (sortedElement.value == "sortID") {
       toDos.sort((a, b) => a.id - b.id);
+      updateQueryParam("sortBy", "sortID")
     }
     displaytoDos(toDos);
   });
@@ -155,7 +174,9 @@ function displaytoDos(toDosData) {
       if (
         toDo.title.toLowerCase().includes(newInputField.value.toLowerCase())
       ) {
+        updateQueryParam("search", newInputField.value)
         return toDo;
+
       }
     });
     console.log(filteredData);
@@ -200,7 +221,7 @@ const createToDo = () => {
 
   if (userInput == "") {
     inputFieldElement.style.border = "2px solid red";
-    errormessageElement.style.display = "block";
+    errorMessageElement.style.display = "block";
 
     // alert("please enter value");
     return false;
@@ -208,7 +229,7 @@ const createToDo = () => {
 
   toDos.push(userInputobj);
   inputFieldElement.style.border = "1px solid ";
-  errormessageElement.style.display = "none";
+  errorMessageElement.style.display = "none";
   let userString = JSON.stringify(toDos);
   localStorage.setItem("toDosArray", userString);
   inputFieldElement.value = "";
@@ -224,3 +245,40 @@ clearbtnElement.addEventListener("click", () => {
   localStorage.clear();
   window.location.reload();
 });
+
+/**
+    * Updates a specific query parameter in the current URL without reloading the page.
+    * @param {string} key The parameter key.
+    * @param {string} value The parameter value.
+    */
+function updateQueryParam(key, value) {
+  const url = new URL(window.location.href);
+
+  // Set the new parameter
+  url.searchParams.set(key, value);
+
+  // Use the History API to update the URL in the address bar
+  // pushState(state object, title, URL)
+  window.history.pushState({ path: url.href }, '', url.href);
+
+  // Optional: if you don't want a new history entry, use replaceState instead:
+  // window.history.replaceState({ path: url.href }, '', url.href);
+}
+
+// Example usage:
+// This will change the URL from (e.g.) www.example.com?page=1 to www.example.com?page=2
+// without refreshing the page.
+
+if (searchParams.has("searchValue")) {
+  // searched = searchParams.get("searchValue");
+  getToDos(searched);
+}
+
+function displayErrors(errors) {
+  let html = errors.map(error => {
+    return `<p class="text-red-600 text-sm mt-1">${error.message}</p>`
+  }).join("");
+
+  errorMessageElement.innerHTML = html;
+
+}
